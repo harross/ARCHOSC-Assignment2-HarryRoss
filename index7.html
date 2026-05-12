@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <title>Centered Name</title>
+</head>
+<body class="w-screen">
+    <button id="dark-mode-btn">Light Mode</button>
+    <div class="intro-container w-full h-[12vh] justify-center items-center flex flex-col bg-[#37619B] text-neutral-200">
+        <h1 class="text-2xl font-semibold mt-4">Lab 6</h1>
+        <h2 class="name text-neutral-400 mb-4">By Harry Ross</h2>
+        <p class="description mb-4">This lab demonstrates understanding of OS scheduling</p>
+    </div>
+
+    <ol class="nav w-full flex justify-center gap-x-4 font-semibold bg-[#eeeeee] py-4 h-[8vh]">
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index.html">Home</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index2.html">GitHub Lab 1</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index3.html">GitHub Lab 2</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index4.html">GitHub Lab 3</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index5.html">Lab 4</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index7.html">Lab 6</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index8.html">Lab 7</a></li>
+        <li class="rounded bg-[#121212] text-neutral-200 px-4 py-2 flex items-center"><a href="index9.html">Lab 8</a></li>
+    </ol>
+
+    <div class="content-container flex flex-col w-screen bg-[#121212] min-h-screen">
+        <div class="heading-container text-neutral-200 w-full text-center pt-12">
+            <h1 class="font-semibold text-3xl">OS Scheduling</h1>
+        </div>
+
+        <div class="tutorial-area pt-12 flex flex-col text-neutral-100 px-6">
+
+            <p class="text-lg pb-2">First, I implemented long-term scheduling by representing each process as a Job object and admitting only those above a priority threshold using a LINQ filter:</p>
+<pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">var admittedJobs = jobs.Where(job => job.Priority > 5).ToList();</pre>
+
+            <p class="text-lg pt-4 pb-2">I then simulated FCFS scheduling, processing jobs in arrival order and recording finish time and turnaround for each:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Process</th>
+                        <th class="border border-neutral-600 px-3 py-1">Arrival</th>
+                        <th class="border border-neutral-600 px-3 py-1">Exec</th>
+                        <th class="border border-neutral-600 px-3 py-1">Finish</th>
+                        <th class="border border-neutral-600 px-3 py-1">Turnaround</th>
+                        <th class="border border-neutral-600 px-3 py-1">Norm. TAT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">A</td><td class="border border-neutral-700 px-3 py-1">0</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">7</td><td class="border border-neutral-700 px-3 py-1">1.17</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">14</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">1.80</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">D</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">17</td><td class="border border-neutral-700 px-3 py-1">11</td><td class="border border-neutral-700 px-3 py-1">3.67</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">23</td><td class="border border-neutral-700 px-3 py-1">15</td><td class="border border-neutral-700 px-3 py-1">2.50</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">25</td><td class="border border-neutral-700 px-3 py-1">16</td><td class="border border-neutral-700 px-3 py-1">8.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">31</td><td class="border border-neutral-700 px-3 py-1">21</td><td class="border border-neutral-700 px-3 py-1">3.50</td></tr>
+                    <tr class="bg-neutral-800"><td class="border border-neutral-600 px-3 py-1 font-bold" colspan="4">Average</td><td class="border border-neutral-600 px-3 py-1 font-bold">11.71</td><td class="border border-neutral-600 px-3 py-1 font-bold">3.09</td></tr>
+                </tbody>
+            </table>
+
+            <p class="text-lg pt-4 pb-2">I then ran Round-Robin with time quanta of 1, 3, 4, and 6. Below are the TQ=3 results, which gave the best balance of turnaround and context switches:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Process</th>
+                        <th class="border border-neutral-600 px-3 py-1">Arrival</th>
+                        <th class="border border-neutral-600 px-3 py-1">Exec</th>
+                        <th class="border border-neutral-600 px-3 py-1">Finish</th>
+                        <th class="border border-neutral-600 px-3 py-1">Turnaround</th>
+                        <th class="border border-neutral-600 px-3 py-1">Norm. TAT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">A</td><td class="border border-neutral-700 px-3 py-1">0</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">15</td><td class="border border-neutral-700 px-3 py-1">13</td><td class="border border-neutral-700 px-3 py-1">2.17</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">25</td><td class="border border-neutral-700 px-3 py-1">20</td><td class="border border-neutral-700 px-3 py-1">4.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">D</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">12</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">2.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">28</td><td class="border border-neutral-700 px-3 py-1">20</td><td class="border border-neutral-700 px-3 py-1">3.33</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">20</td><td class="border border-neutral-700 px-3 py-1">11</td><td class="border border-neutral-700 px-3 py-1">5.50</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">31</td><td class="border border-neutral-700 px-3 py-1">21</td><td class="border border-neutral-700 px-3 py-1">3.50</td></tr>
+                    <tr class="bg-neutral-800"><td class="border border-neutral-600 px-3 py-1 font-bold" colspan="4">Average</td><td class="border border-neutral-600 px-3 py-1 font-bold">13.43</td><td class="border border-neutral-600 px-3 py-1 font-bold">3.07</td></tr>
+                </tbody>
+            </table>
+
+            <p class="text-lg pt-4 pb-2">Finally, I added priority-based selection to Round-Robin (TQ=1), showing that high-priority jobs finish earlier while the lowest-priority job (F) is starved until last:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Process</th>
+                        <th class="border border-neutral-600 px-3 py-1">Arrival</th>
+                        <th class="border border-neutral-600 px-3 py-1">Exec</th>
+                        <th class="border border-neutral-600 px-3 py-1">Priority</th>
+                        <th class="border border-neutral-600 px-3 py-1">Finish</th>
+                        <th class="border border-neutral-600 px-3 py-1">Turnaround</th>
+                        <th class="border border-neutral-600 px-3 py-1">Norm. TAT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">A</td><td class="border border-neutral-700 px-3 py-1">0</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">4</td><td class="border border-neutral-700 px-3 py-1">29</td><td class="border border-neutral-700 px-3 py-1">27</td><td class="border border-neutral-700 px-3 py-1">4.50</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">16</td><td class="border border-neutral-700 px-3 py-1">11</td><td class="border border-neutral-700 px-3 py-1">2.20</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">D</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">25</td><td class="border border-neutral-700 px-3 py-1">19</td><td class="border border-neutral-700 px-3 py-1">6.33</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">14</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">31</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">11.00</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">7</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">12</td><td class="border border-neutral-700 px-3 py-1">2.00</td></tr>
+                    <tr class="bg-neutral-800"><td class="border border-neutral-600 px-3 py-1 font-bold" colspan="5">Average</td><td class="border border-neutral-600 px-3 py-1 font-bold">14.29</td><td class="border border-neutral-600 px-3 py-1 font-bold">4.00</td></tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="reflection-section flex px-6 text-neutral-100">
+            <p class="text-xl pt-6 mb-6">Today, I implemented FCFS, Round-Robin, and Priority Round-Robin scheduling in C#, comparing how quantum size and priority affect turnaround time and fairness across a shared workload.</p>
+        </div>
+    </div>
+</body>
+</html>

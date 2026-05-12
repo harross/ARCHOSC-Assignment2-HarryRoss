@@ -11,9 +11,9 @@
 <body class="w-screen">
     <button id="dark-mode-btn">Light Mode</button>
     <div class="intro-container w-full h-[12vh] justify-center items-center flex flex-col bg-[#37619B] text-neutral-200">
-        <h1 class="text-2xl font-semibold mt-4">Lab 3</h1>
+        <h1 class="text-2xl font-semibold mt-4">Lab 4</h1>
         <h2 class="name text-neutral-400 mb-4">By Harry Ross</h2>
-        <p class="description mb-4">This lab explores using a .css and .js file within a live website.</p>
+        <p class="description mb-4">This lab demonstrates using a VM to deploy a site</p>
     </div>
     
 
@@ -30,28 +30,26 @@
 
     <div class="content-container flex flex-col w-screen bg-[#121212] min-h-screen">
         <div class="heading-container text-neutral-200 w-full text-center pt-12">
-            <h1 class="font-semibold text-3xl">Using CSS and JS in a live website</h1>
+            <h1 class="font-semibold text-3xl">Using a VM to deploy a site</h1>
         </div>
         
         <div class="tutorial-area pt-12 flex flex-col text-neutral-100 px-6">
-            <p class="text-lg pb-2">The first step of this lab was to pull the repo from the last lab, and create a styles.css and script.js file:</p>
-            <img src="Pictures/git-repo-with-styles-and-script.png" class="w-2/3 rounded-xs" alt="">
+            <p class="text-lg pb-2">Firstly, I installed git on my VM, created a “Deployments” folder under documents, and cloned my portfolio repo into this folder.</p>
+            <img src="Pictures/lab4/cap1.png" class="w-2/3 rounded-xs" alt="">
 
-            <p class="text-lg pt-4 pb-2">Then, we link the styles.css and script.js in the head:</p>
-            <img src="Pictures/head-with-css-js.png" class="w-2/3 rounded-xs" alt="">
+            <p class="text-lg pt-4 pb-2">The files were then copied into C:/inetpub/wwwroot to be served by IIS, and the site was confirmed accessible over HTTP from my main machine:</p>
+            <img src="Pictures/lab4/cap2.png" class="w-2/3 rounded-xs" alt="">
 
-            <p class="text-lg pt-4 pb-2">We use the css file to target html items based on class and change their appearance:</p>
-            <img src="Pictures/css-and-its-changes.png" class="w-2/3 rounded-xs" alt="">
+            <p class="text-lg pt-4 pb-2">I then connected to the development VM, cloned the repo there, and confirmed it could reach the hosted site:</p>
+            <img src="Pictures/lab4/cap3.png" class="w-2/3 rounded-xs" alt="">
 
-            <p class="text-lg pt-4 pb-2">Next, we use JS to target items based on class, and verify this is working with the web console:</p>
-            <img src="Pictures/screenshot-of-js-and-its-result.png" class="w-2/3 rounded-xs" alt="">
+            <p class="text-lg pt-4 pb-2">Finally, I installed VS Code on the dev VM, edited the site directly from wwwroot, and confirmed the change only appeared on VM2 (note the blue text):</p>
+            <img src="Pictures/lab4/cap4.png" class="w-2/3 rounded-xs" alt="">
 
-            <p class="text-lg pt-4 pb-2">Next, we use CSS to style the buttons from earlier into a navbar, as well as making a responsive "background" container:</p>
-            <img src="Pictures/navbar-with-css.png" class="w-2/3 rounded-xs" alt="">
         </div>
 
         <div class="reflection-section flex px-6 text-neutral-100">
-            <p class="text-xl pt-6 mb-6">Today, we showed how we can use CSS and JS to style a live website.</p>
+            <p class="text-xl pt-6 mb-6">Today, we showed how we can use a VM to deploy a site and access it over the internet or local network.</p>
         </div>
     </div>
 </body>

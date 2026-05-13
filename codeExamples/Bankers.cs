@@ -1,6 +1,3 @@
-// Banker's Algorithm - safe state detection
-// Module: Architectures, Operating Systems and the Cloud (441102)
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -34,10 +34,42 @@
 
         <div class="tutorial-area pt-12 flex flex-col text-neutral-100 px-6">
 
-            <p class="text-lg pb-2">First, I implemented long-term scheduling by representing each process as a Job object and admitting only those above a priority threshold using a LINQ filter:</p>
-<pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">var admittedJobs = jobs.Where(job => job.Priority > 5).ToList();</pre>
+            <p class="text-lg pb-2">First, I implemented long-term scheduling by representing each process as a <code class="bg-neutral-800 px-1 rounded text-base">Job</code> object and admitting only those with a priority greater than 5 using a LINQ filter:</p>
+<pre class="bg-neutral-900 p-4 rounded mt-1 mb-2 text-sm font-mono overflow-x-auto">var jobs = new List&lt;Job&gt; {
+    new Job { Name = "A", Priority = 5,  ArrivalTime = 0,  ExecutionTime = 3 },
+    new Job { Name = "B", Priority = 4,  ArrivalTime = 2,  ExecutionTime = 6 },
+    new Job { Name = "C", Priority = 8,  ArrivalTime = 5,  ExecutionTime = 5 },
+    new Job { Name = "D", Priority = 6,  ArrivalTime = 6,  ExecutionTime = 3 },
+    new Job { Name = "E", Priority = 10, ArrivalTime = 8,  ExecutionTime = 6 },
+    new Job { Name = "F", Priority = 3,  ArrivalTime = 9,  ExecutionTime = 2 },
+    new Job { Name = "G", Priority = 7,  ArrivalTime = 10, ExecutionTime = 6 }
+};
 
-            <p class="text-lg pt-4 pb-2">I then simulated FCFS scheduling, processing jobs in arrival order and recording finish time and turnaround for each:</p>
+var admittedJobs = jobs.Where(job =&gt; job.Priority &gt; 5).ToList();</pre>
+
+            <p class="text-lg pt-4 pb-2">Jobs C, D, E, and G are admitted; A (priority 5), B (4), and F (3) are rejected:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Process</th>
+                        <th class="border border-neutral-600 px-3 py-1">Arrival</th>
+                        <th class="border border-neutral-600 px-3 py-1">Exec</th>
+                        <th class="border border-neutral-600 px-3 py-1">Priority</th>
+                        <th class="border border-neutral-600 px-3 py-1">Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-neutral-500"><td class="border border-neutral-700 px-3 py-1">A</td><td class="border border-neutral-700 px-3 py-1">0</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1 text-red-400">✗ Rejected</td></tr>
+                    <tr class="text-neutral-500"><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">4</td><td class="border border-neutral-700 px-3 py-1 text-red-400">✗ Rejected</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1 text-green-400">✓ Admitted</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">D</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1 text-green-400">✓ Admitted</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1 text-green-400">✓ Admitted</td></tr>
+                    <tr class="text-neutral-500"><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1 text-red-400">✗ Rejected</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">7</td><td class="border border-neutral-700 px-3 py-1 text-green-400">✓ Admitted</td></tr>
+                </tbody>
+            </table>
+
+            <p class="text-lg pt-4 pb-2">I then simulated FCFS scheduling, processing jobs in arrival order and recording finish time, turnaround time, and normalised turnaround for each:</p>
             <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
                 <thead>
                     <tr class="bg-neutral-800 text-neutral-300">
@@ -61,7 +93,30 @@
                 </tbody>
             </table>
 
-            <p class="text-lg pt-4 pb-2">I then ran Round-Robin with time quanta of 1, 3, 4, and 6. Below are the TQ=3 results, which gave the best balance of turnaround and context switches:</p>
+            <p class="text-lg pt-4 pb-2">The Gantt chart below shows each process running to completion in arrival order - no preemption occurs, so F waits 14 units despite only needing 2 (normalised TAT of 8.00):</p>
+            <div class="overflow-x-auto mt-1 mb-2">
+                <div class="flex min-w-[560px] h-9 rounded overflow-hidden border border-neutral-600 text-xs font-bold">
+                    <div class="bg-blue-600   flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">A</div>
+                    <div class="bg-emerald-600 flex items-center justify-center border-r border-neutral-900" style="width:calc(6/31*100%)">B</div>
+                    <div class="bg-amber-600   flex items-center justify-center border-r border-neutral-900" style="width:calc(5/31*100%)">C</div>
+                    <div class="bg-rose-600    flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">D</div>
+                    <div class="bg-purple-600  flex items-center justify-center border-r border-neutral-900" style="width:calc(6/31*100%)">E</div>
+                    <div class="bg-pink-600    flex items-center justify-center border-r border-neutral-900" style="width:calc(2/31*100%)">F</div>
+                    <div class="bg-cyan-600    flex items-center justify-center"                           style="width:calc(6/31*100%)">G</div>
+                </div>
+                <div class="flex min-w-[560px] text-xs text-neutral-500 mt-1 relative">
+                    <div style="width:calc(3/31*100%)">0</div>
+                    <div style="width:calc(6/31*100%)">3</div>
+                    <div style="width:calc(5/31*100%)">9</div>
+                    <div style="width:calc(3/31*100%)">14</div>
+                    <div style="width:calc(6/31*100%)">17</div>
+                    <div style="width:calc(2/31*100%)">23</div>
+                    <div style="width:calc(6/31*100%)">25</div>
+                    <div class="absolute right-0">31</div>
+                </div>
+            </div>
+
+            <p class="text-lg pt-4 pb-2">I then ran Round-Robin with time quanta of 1, 3, 4, and 6. Below are the TQ=3 results, which gave the best balance of turnaround and context switches. With TQ=6 every job fits within a single quantum, making it equivalent to FCFS:</p>
             <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
                 <thead>
                     <tr class="bg-neutral-800 text-neutral-300">
@@ -85,7 +140,38 @@
                 </tbody>
             </table>
 
-            <p class="text-lg pt-4 pb-2">Finally, I added priority-based selection to Round-Robin (TQ=1), showing that high-priority jobs finish earlier while the lowest-priority job (F) is starved until last:</p>
+            <p class="text-lg pt-4 pb-2">The Gantt chart below shows how TQ=3 interleaves processes - the same process appears in multiple blocks, with context switches visible at each boundary:</p>
+            <div class="overflow-x-auto mt-1 mb-2">
+                <div class="flex min-w-[560px] h-9 rounded overflow-hidden border border-neutral-600 text-xs font-bold">
+                    <div class="bg-blue-600   flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">A</div>
+                    <div class="bg-emerald-600 flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">B</div>
+                    <div class="bg-amber-600   flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">C</div>
+                    <div class="bg-rose-600    flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">D</div>
+                    <div class="bg-emerald-600 flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">B</div>
+                    <div class="bg-purple-600  flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">E</div>
+                    <div class="bg-amber-600   flex items-center justify-center border-r border-neutral-900" style="width:calc(2/31*100%)">C</div>
+                    <div class="bg-pink-600    flex items-center justify-center border-r border-neutral-900" style="width:calc(2/31*100%)">F</div>
+                    <div class="bg-cyan-600    flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">G</div>
+                    <div class="bg-purple-600  flex items-center justify-center border-r border-neutral-900" style="width:calc(3/31*100%)">E</div>
+                    <div class="bg-cyan-600    flex items-center justify-center"                           style="width:calc(3/31*100%)">G</div>
+                </div>
+                <div class="flex min-w-[560px] text-xs text-neutral-500 mt-1 relative">
+                    <div style="width:calc(3/31*100%)">0</div>
+                    <div style="width:calc(3/31*100%)">3</div>
+                    <div style="width:calc(3/31*100%)">6</div>
+                    <div style="width:calc(3/31*100%)">9</div>
+                    <div style="width:calc(3/31*100%)">12</div>
+                    <div style="width:calc(3/31*100%)">15</div>
+                    <div style="width:calc(2/31*100%)">18</div>
+                    <div style="width:calc(2/31*100%)">20</div>
+                    <div style="width:calc(3/31*100%)">22</div>
+                    <div style="width:calc(3/31*100%)">25</div>
+                    <div style="width:calc(3/31*100%)">28</div>
+                    <div class="absolute right-0">31</div>
+                </div>
+            </div>
+
+            <p class="text-lg pt-4 pb-2">Finally, I added priority-based selection to Round-Robin (TQ=1), showing that high-priority jobs (E=10, C=8, G=7) finish earlier while the lowest-priority job F (priority 3) is starved until last, with a normalised TAT of 11.00:</p>
             <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
                 <thead>
                     <tr class="bg-neutral-800 text-neutral-300">
@@ -100,12 +186,12 @@
                 </thead>
                 <tbody>
                     <tr><td class="border border-neutral-700 px-3 py-1">A</td><td class="border border-neutral-700 px-3 py-1">0</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
-                    <tr><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">4</td><td class="border border-neutral-700 px-3 py-1">29</td><td class="border border-neutral-700 px-3 py-1">27</td><td class="border border-neutral-700 px-3 py-1">4.50</td></tr>
-                    <tr><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">16</td><td class="border border-neutral-700 px-3 py-1">11</td><td class="border border-neutral-700 px-3 py-1">2.20</td></tr>
+                    <tr class="text-red-300"><td class="border border-neutral-700 px-3 py-1">B</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">4</td><td class="border border-neutral-700 px-3 py-1">29</td><td class="border border-neutral-700 px-3 py-1">27</td><td class="border border-neutral-700 px-3 py-1">4.50</td></tr>
+                    <tr class="text-green-300"><td class="border border-neutral-700 px-3 py-1">C</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">5</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">16</td><td class="border border-neutral-700 px-3 py-1">11</td><td class="border border-neutral-700 px-3 py-1">2.20</td></tr>
                     <tr><td class="border border-neutral-700 px-3 py-1">D</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">25</td><td class="border border-neutral-700 px-3 py-1">19</td><td class="border border-neutral-700 px-3 py-1">6.33</td></tr>
-                    <tr><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">14</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
-                    <tr><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">31</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">11.00</td></tr>
-                    <tr><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">7</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">12</td><td class="border border-neutral-700 px-3 py-1">2.00</td></tr>
+                    <tr class="text-green-300"><td class="border border-neutral-700 px-3 py-1">E</td><td class="border border-neutral-700 px-3 py-1">8</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">14</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">1.00</td></tr>
+                    <tr class="text-red-300"><td class="border border-neutral-700 px-3 py-1">F</td><td class="border border-neutral-700 px-3 py-1">9</td><td class="border border-neutral-700 px-3 py-1">2</td><td class="border border-neutral-700 px-3 py-1">3</td><td class="border border-neutral-700 px-3 py-1">31</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">11.00</td></tr>
+                    <tr class="text-green-300"><td class="border border-neutral-700 px-3 py-1">G</td><td class="border border-neutral-700 px-3 py-1">10</td><td class="border border-neutral-700 px-3 py-1">6</td><td class="border border-neutral-700 px-3 py-1">7</td><td class="border border-neutral-700 px-3 py-1">22</td><td class="border border-neutral-700 px-3 py-1">12</td><td class="border border-neutral-700 px-3 py-1">2.00</td></tr>
                     <tr class="bg-neutral-800"><td class="border border-neutral-600 px-3 py-1 font-bold" colspan="5">Average</td><td class="border border-neutral-600 px-3 py-1 font-bold">14.29</td><td class="border border-neutral-600 px-3 py-1 font-bold">4.00</td></tr>
                 </tbody>
             </table>

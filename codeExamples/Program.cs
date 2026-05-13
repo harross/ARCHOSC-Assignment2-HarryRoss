@@ -1,20 +1,9 @@
-// OS Scheduling Lab - CPU Scheduling Algorithms
-// Module: Architectures, Operating Systems and the Cloud (441102)
-// Author: Harry Ross
-//
-// Implements:
-//   1. Long-term scheduler (admission filter on Table 1)
-//   2. First-Come-First-Serve  (FCFS)        - non-preemptive
-//   3. Round-Robin (RR)                       - preemptive, varying time quanta
-//   4. Priority-based Round-Robin             - preemptive with priority selection
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OSScheduling
 {
-    /// <summary>Represents a single process / job in the scheduling system.</summary>
     public class Job
     {
         public string Name { get; set; } = "";
@@ -30,7 +19,6 @@ namespace OSScheduling
             => $"Job {Name}, Priority {Priority}, Arrival Time {ArrivalTime}, Execution Time {ExecutionTime}";
     }
 
-    /// <summary>A single contiguous slice of CPU time - used to build Gantt charts.</summary>
     public record GanttSlice(string Name, int Start, int End);
 
     public static class Program
@@ -69,10 +57,6 @@ namespace OSScheduling
             }
         }
 
-        // --------------------------------------------------------
-        // DATA
-        // --------------------------------------------------------
-
         // Table 1 - includes priority field; used for long-term + priority RR
         static List<Job> BuildTable1() => new()
         {
@@ -95,9 +79,6 @@ namespace OSScheduling
                 Priority = 0
             }).ToList();
 
-        // --------------------------------------------------------
-        // 1. LONG-TERM SCHEDULER
-        // --------------------------------------------------------
         static void LongTermScheduling()
         {
             var jobs = BuildTable1();
@@ -108,9 +89,6 @@ namespace OSScheduling
             foreach (var job in admitted) Console.WriteLine($"  {job}");
         }
 
-        // --------------------------------------------------------
-        // 2a. FCFS - non-preemptive, runs jobs to completion in arrival order
-        // --------------------------------------------------------
         static List<GanttSlice> FCFS(List<Job> jobs)
         {
             var ordered = jobs.OrderBy(j => j.ArrivalTime).ToList();
@@ -130,9 +108,6 @@ namespace OSScheduling
             return slices;
         }
 
-        // --------------------------------------------------------
-        // 2b. ROUND-ROBIN - preemptive, FIFO ready queue, fixed quantum
-        // --------------------------------------------------------
         static List<GanttSlice> RoundRobin(List<Job> jobs, int quantum)
         {
             // Reset remaining time for each run
@@ -193,11 +168,6 @@ namespace OSScheduling
             return MergeAdjacent(slices);
         }
 
-        // --------------------------------------------------------
-        // 3. PRIORITY ROUND-ROBIN
-        // Same quantum-based preemption as RR, but the next job pulled from
-        // the ready set is the one with the highest Priority value.
-        // --------------------------------------------------------
         static List<GanttSlice> PriorityRoundRobin(List<Job> jobs, int quantum)
         {
             foreach (var j in jobs) j.RemainingTime = j.ExecutionTime;
@@ -273,9 +243,6 @@ namespace OSScheduling
             return merged;
         }
 
-        // --------------------------------------------------------
-        // OUTPUT HELPERS
-        // --------------------------------------------------------
         static void PrintMetrics(List<Job> jobs)
         {
             Console.WriteLine($"{"Process",-9}{"Arrival",-10}{"Exec",-7}{"Finish",-9}{"TAT",-7}{"NTAT",-7}");

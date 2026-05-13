@@ -34,24 +34,93 @@
 
         <div class="tutorial-area pt-12 flex flex-col text-neutral-100 px-6">
 
-            <p class="text-lg pb-2">Task 1 asked us to calculate the properties of a virtual address space with a 4-bit VPN and 8-bit offset, giving 16 virtual pages of 256 bytes each.</p>
+            <p class="text-lg pb-2">Task 1 asked us to work out the properties of a virtual address space with a 4-bit VPN and 8-bit offset, giving 16 virtual pages of 256 bytes each. The address space properties are:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Property</th>
+                        <th class="border border-neutral-600 px-3 py-1">Calculation</th>
+                        <th class="border border-neutral-600 px-3 py-1">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Virtual pages</td><td class="border border-neutral-700 px-3 py-1">2<sup>4</sup></td><td class="border border-neutral-700 px-3 py-1">16</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Page size (bytes)</td><td class="border border-neutral-700 px-3 py-1">2<sup>8</sup></td><td class="border border-neutral-700 px-3 py-1">256</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Physical pages</td><td class="border border-neutral-700 px-3 py-1">2<sup>3</sup></td><td class="border border-neutral-700 px-3 py-1">8</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Page table entry width</td><td class="border border-neutral-700 px-3 py-1">1 (D) + 1 (R) + 3 (PPN)</td><td class="border border-neutral-700 px-3 py-1">5 bits</td></tr>
+                </tbody>
+            </table>
 
-            <p class="text-lg pt-4 pb-2">Task 2 split the bottom 32KB of physical memory into 8 frames of 4KB each, with the following address ranges:</p>
-            <pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">Frame 0: 0x0000 - 0x0FFF
-Frame 1: 0x1000 - 0x1FFF
-Frame 2: 0x2000 - 0x2FFF
-Frame 3: 0x3000 - 0x3FFF
-Frame 4: 0x4000 - 0x4FFF
-Frame 5: 0x5000 - 0x5FFF
-Frame 6: 0x6000 - 0x6FFF
-Frame 7: 0x7000 - 0x7FFF</pre>
+            <p class="text-lg pt-4 pb-2">For the address translation, we were given virtual address 0x2C8. Splitting this into its VPN and offset components by treating the top 4 bits as the VPN and the lower 8 bits as the offset:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Step</th>
+                        <th class="border border-neutral-600 px-3 py-1">Binary</th>
+                        <th class="border border-neutral-600 px-3 py-1">Hex</th>
+                        <th class="border border-neutral-600 px-3 py-1">Decimal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Full virtual address</td><td class="border border-neutral-700 px-3 py-1">0010 1100 1000</td><td class="border border-neutral-700 px-3 py-1">0x2C8</td><td class="border border-neutral-700 px-3 py-1">712</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">VPN (top 4 bits)</td><td class="border border-neutral-700 px-3 py-1">0010</td><td class="border border-neutral-700 px-3 py-1">0x2</td><td class="border border-neutral-700 px-3 py-1">2</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Offset (lower 8 bits)</td><td class="border border-neutral-700 px-3 py-1">1100 1000</td><td class="border border-neutral-700 px-3 py-1">0xC8</td><td class="border border-neutral-700 px-3 py-1">200</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">PPN (page table lookup)</td><td class="border border-neutral-700 px-3 py-1">-</td><td class="border border-neutral-700 px-3 py-1">from table row 2</td><td class="border border-neutral-700 px-3 py-1">-</td></tr>
+                </tbody>
+            </table>
 
-            <p class="text-lg pt-4 pb-2">Task 4 worked through TLB sizing: for a 32-bit virtual, 24-bit physical address space with 1KB pages, the page table requires 4M entries at 2 bytes each, occupying 8,192 pages of physical memory.</p>
+            <p class="text-lg pt-4 pb-2">Task 2 split the bottom 32 KB of physical memory into 8 page frames of 4 KB each. Each frame spans exactly 0x1000 bytes, giving the following ranges (A–D are the boundary values from the lab table):</p>
+            <pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">Frame 0:  0x0000 – 0x0FFF
+Frame 1:  0x1000 – 0x1FFF
+Frame 2:  0x2000 – 0x2FFF
+Frame 3:  0x3000 – 0x3FFF
+Frame 4:  0x4000 – 0x4FFF
+Frame 5:  0x5000 – 0x5FFF
+Frame 6:  0x6000 – 0x6FFF
+Frame 7:  0x7000 – 0x7FFF</pre>
 
-            <p class="text-lg pt-4 pb-2">I then extended the example class to simulate a 4-entry FIFO TLB, tracking hits and misses over a sequence of accesses:</p>
+            <p class="text-lg pt-4 pb-2">Task 3 used a page table with a 32-bit virtual address where the top 20 bits identify the page and the lower 12 bits are the offset. Given a virtual address, we looked up the page frame from the first 8 entries of the table, then constructed the physical address by appending the original 12-bit offset to the retrieved page frame number.</p>
+
+            <p class="text-lg pt-4 pb-2">Task 4.1 asked us to size the TLB and page table for a system with 2<sup>32</sup> bytes of virtual memory, 2<sup>24</sup> bytes of physical memory, and a 1 KB page size:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Question</th>
+                        <th class="border border-neutral-600 px-3 py-1">Calculation</th>
+                        <th class="border border-neutral-600 px-3 py-1">Answer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">(i) Pages in physical memory</td><td class="border border-neutral-700 px-3 py-1">2<sup>24</sup> ÷ 2<sup>10</sup></td><td class="border border-neutral-700 px-3 py-1">2<sup>14</sup> = 16,384</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">(ii) Page table entries</td><td class="border border-neutral-700 px-3 py-1">2<sup>32</sup> ÷ 2<sup>10</sup></td><td class="border border-neutral-700 px-3 py-1">2<sup>22</sup> = 4,194,304</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">(iii) Bits per page table entry</td><td class="border border-neutral-700 px-3 py-1">PPN (14 bits) + D + R</td><td class="border border-neutral-700 px-3 py-1">16 bits (2 bytes)</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">(iv) Pages used by page table</td><td class="border border-neutral-700 px-3 py-1">2<sup>22</sup> × 2 bytes ÷ 2<sup>10</sup></td><td class="border border-neutral-700 px-3 py-1">2<sup>13</sup> = 8,192</td></tr>
+                </tbody>
+            </table>
+
+            <p class="text-lg pt-4 pb-2">For Task 4.2, the bonus task asked us to find the physical address for virtual address 0x1804. Decomposing with a 10-bit offset (lower order bits) and the remaining bits as the VPN:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Virtual address</th>
+                        <th class="border border-neutral-600 px-3 py-1">Binary</th>
+                        <th class="border border-neutral-600 px-3 py-1">VPN</th>
+                        <th class="border border-neutral-600 px-3 py-1">Offset</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">0x1804</td><td class="border border-neutral-700 px-3 py-1">0001 1000 0000 0100</td><td class="border border-neutral-700 px-3 py-1">6 (0x6)</td><td class="border border-neutral-700 px-3 py-1">4 (0x004)</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">0x00FC</td><td class="border border-neutral-700 px-3 py-1">0000 0000 1111 1100</td><td class="border border-neutral-700 px-3 py-1">0 (0x0)</td><td class="border border-neutral-700 px-3 py-1">252 (0x0FC)</td></tr>
+                </tbody>
+            </table>
+
+            <p class="text-lg pt-4 pb-2">For 0x1804, the MMU takes VPN 6, checks the TLB, finds the corresponding PPN, then appends offset 4 to form the physical address. For 0x00FC (VPN = 0), if that page is non-resident (R = 0 in the page table), the MMU triggers a page fault and the OS must load the page from disk before translation can complete.</p>
+
+            <p class="text-lg pt-4 pb-2">I then extended the example TLB class to track hits and misses, using a FIFO eviction policy when the 4-entry TLB is full:</p>
 <pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono overflow-x-auto">public int? Lookup(int vpn) {
-    foreach (var entry in entries)
+    foreach (var entry in entries) {
         if (entry.VPN == vpn) { Hits++; return entry.PPN; }
+    }
     Misses++;
     return null;
 }
@@ -61,14 +130,32 @@ public void Insert(int vpn, int ppn) {
     entries.Add(new TLBEntry { VPN = vpn, PPN = ppn });
 }</pre>
 
-            <p class="text-lg pt-4 pb-2">Running the access sequence 0,1,0,2,3,0,1,4,5,0,1,6,7,0,1 against the 4-entry TLB produced a 33.3% hit ratio, as VPNs 0 and 1 are repeatedly evicted once the working set grows beyond 4 entries:</p>
-<pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">Hits: 5, Misses: 10
+            <p class="text-lg pt-4 pb-2">Running the access sequence 0,1,0,2,3,0,1,4,5,0,1,6,7,0,1 against the 4-entry TLB produced a 33.3% hit ratio - once the working set grows beyond 4 unique VPNs, entries 0 and 1 are repeatedly evicted and then missed on re-access:</p>
+<pre class="bg-neutral-900 p-4 rounded mt-1 text-sm font-mono">Hits: 5   Misses: 10
 Hit ratio: 33.3%</pre>
+
+            <p class="text-lg pt-4 pb-2">Task 5 covered memory interfacing. Using a combined address format of [Write][Read][Enable][decoder bits], the same pattern as the lab example, we worked out the addresses to read and write specific locations. The memory table uses a 4-to-16 decoder (4 decoder bits), giving 7-bit combined addresses:</p>
+            <table class="mt-1 text-sm font-mono" style="border-collapse: collapse;">
+                <thead>
+                    <tr class="bg-neutral-800 text-neutral-300">
+                        <th class="border border-neutral-600 px-3 py-1">Operation</th>
+                        <th class="border border-neutral-600 px-3 py-1">Target</th>
+                        <th class="border border-neutral-600 px-3 py-1">W R E</th>
+                        <th class="border border-neutral-600 px-3 py-1">Decoder</th>
+                        <th class="border border-neutral-600 px-3 py-1">Binary</th>
+                        <th class="border border-neutral-600 px-3 py-1">Hex address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Read</td><td class="border border-neutral-700 px-3 py-1">FEAD (index A)</td><td class="border border-neutral-700 px-3 py-1">0 1 1</td><td class="border border-neutral-700 px-3 py-1">1010</td><td class="border border-neutral-700 px-3 py-1">011 1010</td><td class="border border-neutral-700 px-3 py-1">0x3A</td></tr>
+                    <tr><td class="border border-neutral-700 px-3 py-1">Write</td><td class="border border-neutral-700 px-3 py-1">Index C</td><td class="border border-neutral-700 px-3 py-1">1 0 1</td><td class="border border-neutral-700 px-3 py-1">1100</td><td class="border border-neutral-700 px-3 py-1">101 1100</td><td class="border border-neutral-700 px-3 py-1">0x5C</td></tr>
+                </tbody>
+            </table>
 
         </div>
 
         <div class="reflection-section flex px-6 text-neutral-100">
-            <p class="text-xl pt-6 mb-6">Today, I covered virtual memory translation, page frames, and TLB behaviour, showing how a small TLB capacity directly limits hit ratio when the working set exceeds it.</p>
+            <p class="text-xl pt-6 mb-6">Today, I covered virtual memory translation, page frame addressing, TLB sizing and simulation, and memory interfacing with decoders - showing how each layer of the memory hierarchy maps between addresses and why TLB capacity directly limits hit ratio when the working set exceeds it.</p>
         </div>
     </div>
 </body>
